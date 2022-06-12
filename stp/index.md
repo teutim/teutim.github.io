@@ -19,7 +19,7 @@ STP ist turing-vollständig und kann folglich jedes durch einen Rechner lösbare
 [Alte Dokumentation](./alteDoku.html)
 [Gültige Dokumentation](./doku.html)
 [Zukünftige Dokumentation](./dokumentation.html)
-[Skriptverzeichnis](./index.html)
+[Skriptverzeichnis](./scripts/index.html)
 [Java-Testprogramm](./testprogramm.html)
 
 (c) Teutim 2022
