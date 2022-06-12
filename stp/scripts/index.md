@@ -1,5 +1,5 @@
 # Skripte
 
-[corelib.stp](./corelib.stp)
-[stdlib.stp](./stdlib.stp)
-[stdmath.stp](./stdmath.stp)
+- [corelib.stp](./corelib.html)
+- [stdlib.stp](./stdlib.html)
+- [stdmath.stp](./stdmath.html)

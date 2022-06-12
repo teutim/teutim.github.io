@@ -1,3 +1,5 @@
+
+```scheme
 (begin
   (ignore "STDLIB.STP - Teutim - 2022-06-12")
   (include "stdlib.stp")
@@ -12,3 +14,4 @@
        'substring {p-str p-start p-ex -> (eval (append '(join) (sublist (chars p-str) p-start p-ex)))})
   (include "stdmath.stp")
   (return true))
+```

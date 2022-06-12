@@ -1,3 +1,5 @@
+
+```scheme
 (begin
   (ignore "STDMATH.STP - Teutim - 2022-06-12")
   (def 'randstate 0x12345678)
@@ -26,3 +28,4 @@
              (def 'l-i (++ l-i))))
            result))})
   true)
+```
