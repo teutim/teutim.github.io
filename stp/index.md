@@ -14,6 +14,8 @@ STP ist turing-vollständig und kann folglich jedes durch einen Rechner lösbare
 
 ## Wo findet man Informationen zu STP ?
 
+[STP-0](./STP-0.jar)
+
 [Alte Dokumentation](./alteDoku.html)
 [Gültige Dokumentation](./doku.html)
 [Zukünftige Dokumentation](./dokumentation.html)
