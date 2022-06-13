@@ -144,6 +144,13 @@ Legende zur Notation:
 - {A B} steht dafür, dass für A die Beschränkung B gilt
 - name=A steht dafür, dass name vom Typ A ist
 
+| Name | Eingabetypen | Ausgabetypen | Beschreibung | Version | Definition |
+| ---- | ------------ | ------------ | ------------ | ------- | ---------- |
+| get-primitives | V | L | Liste der Bezeichner aller primitiven Funktionen | | |
+| get-context | V | M | Aktueller Kontext | neu | |
+| set-context | M | V / E | Überschreibt den aktuellen Kontext | neu | |
+
+
 <table border="1">
     <thead>
         <tr>
