@@ -1,8 +1,8 @@
 
 ```scheme
 (begin
-  (ignore "STDLIB.STP - Teutim - 2022-06-12")
-  (include "stdlib.stp")
+  (ignore "STDLIB.STP - Teutim - 2022-06-13")
+  ?(parse (io-read-string "corelib.stp"))
   (def 'ord       {p-str              -> (code-points p-str)[+ 0]}
        'chr       {p-int              -> (codes-to-string (list p-int))}
        'first     {p-list             -> p-list[+ 0]}
