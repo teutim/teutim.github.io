@@ -46,6 +46,7 @@ gleichbedeutend mit
 `(Map vorname "Max" nachname "Mustermann" geburtsjahr 1950)`
 Es wird sich vorbehalten, diesen Zeichen in diesem Zusammenhang in Zukunft eine tatsächliche syntaktische Bedeutung/Erfordernis zu verleihen.
 In allen anderen Zusammenhängen (id est Ausdrücke, die nicht Bestandteil eines Mapkonstruktors sind) darf der Parser Ausdrücke ablehnen, die mit diesen beiden Zeichen enden.
+11. Sofern nicht anders bestimmt, evaluieren Ausdrücke zu sich selbst.
 
 ## Blockausdrücke
 
@@ -55,10 +56,12 @@ In allen anderen Zusammenhängen (id est Ausdrücke, die nicht Bestandteil eines
 
 ## Funktionen
 
-1. In der Regel evaluieren Ausdrücke zu sich selbst. Es gibt allerdings Ausdrücke, die eine spezielle Bedeutung haben und eine spezielle Interpretation erzwingen. Funktionen gehören zu den Ausdrücken mit besonderer Bedeutung.
-2. Für eine Liste mit mindestens einem Element gilt, dass wenn das erste Element dieser Liste ein Funktionsname ist, die Liste bei der Interpretation einen Funktionsaufruf der entsprechenden Funktion darstellt, wobei die übringen Elemente der Liste die zu übergebenden Parameter darstellen. Bei der Interpretation wird die Liste entsprechend ausgewertet und durch den Rückgabewert der Funktion ersetzt.
-3. Im Anhang befindet sich eine Tabelle von direkt unterstützten Funktionen.
-4. Jede Funktion kann mit `(call FUNC LISTE)` aufgerufen werden, wobei FUNC eine Funktion ist und LISTE die zu übergebenden Parameter.
+1. Eine Funktion besteht aus einer Parameterliste und einer Liste von Ausdrücken (Funktionsbauch).
+2. Ein Funktionsaufruf ist eine Liste, deren erstes Element zu einer Funktion evaluiert. Beim Aufruf der Funktion werden dieser Argumente entsprechend ihren Parametern übergeben und die Liste von Ausdrücken der Funktion nacheinander interpretiert, wobei das letzte Resultat dieser Interpretationen das Resultat des Funktionsaufrufes ist.
+3. Ein Funktionsobjekt kann mit einem Literal beschrieben werden: `{P1 P2 ... Pn -> A1 A2 ... An}`, wobei Pi ein Parameter ist und Ai ein beliebiger Ausdruck.
+4. Innerhalb des Funktionsbauches ist `@args` als Liste aller übergebenen Argumente definiert.
+5. Als Funktion wird ebenfalls eine Liste von Funktionen behandelt. Hier wird bei einem Aufruf die erste Funktion ausgewählt,
+   deren Beschränkungen von den Argumenten des Aufrufes erfüllt werden.
 
 ## Variablen
 
@@ -94,23 +97,12 @@ Rationale Zahlen (Verhältnisse zweier ganzer Zahlen) sind die Grundlage mathema
 
 Standardmäßig akzeptiert STP jeden Ausdruck als Funktionsargument und kann jeden Ausdruck jeder Art als Resultat zurückgeben. Um den Bereich erlaubter Argumente einzuschränken, ist es möglich Beschränkungen, sogenannte 'Constrain's zu verwenden. Diese stellen eine Bedingung dar, die das übergebene Argument erfüllen muss, damit die entsprechende Funktion ausgewertet werden kann; und sind entsprechend Parameter-Annotationen.
 
-Es gibt allgemeine Beschränkungen und Datentypbeschränkungen. Allgemeine Beschränkungen sind beliebige Bedingungen, die erfüllt werden müssen.
+Beschränkungen sind beliebige Bedingungen, die von den Argumenten eines Funktionsaufrufes erfüllt werden müssen.
 Beispiel:
-`(Function ((x (Function (x) (% x 2)))) x)`
+`{(constrain x (= (mod x 2) 0)) -> x}`
 Beschränkung für den Parameter x, die ausschließlich grade Zahlen als Argumente erlaubt.
 
-Datentypbeschränkungen sind Beschränkungen des Datentyps der Parameter.
-Beispiel:
-`(Function ((constrain x (instanceof x "Integer"))) x)`
-Kann abgekürzt werden zu:
-`(Function (x:Integer) x)`
-Beschränkung für den Parameter x, die ausschließlich Argumente des Datentyps Integer (Ganzzahl) und dessen Untertypen erlaubt.
-
-Für den Aufruf anonymer Funktionen mit Beschränkungen gilt, dass wenn diese nicht erfüllt werden, ein Fehler zurückgegeben wird.
-
-Für den Aufruf benannter Funktionen mit allgemeinen Beschränkungen gilt, dass alle gleichnamigen Funktionen auf Erfüllung der Bedingungen getestet werden. Erfüllen die Argumente alle Bedingungen einer benannten Funktion, so wird diese ausgeführt, andernfalls wird ein Fehler zurückgegeben. Wenn die Argumente die Bedingungen mehrerer benannter Funktionen erfüllen, so ist das Verhalten implementationsdefiniert. Entweder wird ein Ambiguitätsfehler zurückgegeben oder eine beliebige dieser Funktionen ausgewertet.
-
-Für den Aufruf benannter Funktionen mit Datentypbeschränkungen gilt, dass bei mehreren gleichnamigen Funktionen diejenige ausgewertet wird, deren Typbeschränkungen die am meisten spezialisierten sind, die durch die Argumente noch erfüllt werden.
+Für den Aufruf von Funktionen in Form einer Funktionsliste mit Beschränkungen gilt, dass alle in der Liste enthaltenen Funktionen auf Erfüllung der Bedingungen getestet werden. Erfüllen die Argumente alle Bedingungen einer Funktion, so wird diese ausgeführt. Wenn die Argumente die Bedingungen mehrerer benannter Funktionen erfüllen, so ist das Resultat das Ergebnis der ersten Funktion, die die Beschränkungen erfüllt. Gibt es keine Funktion, die die Bedingungen erfüllt, wird ein Fehler ausgegeben.
 
 ## Operatoren
 
@@ -120,7 +112,7 @@ Für den Aufruf benannter Funktionen mit Datentypbeschränkungen gilt, dass bei 
 4. Ein Ausdruck, der mit ... beginnt, wird transformiert zu ...
     - `'x` -> `(quote x)`
     - `?x` -> `(eval x)`
-    - ``x` -> `(quasiquote x)`
+    - ```x`` -> `(quasiquote x)`
     - `,x` -> `(unquote x)`
 5. `(a . b)` wird transformiert zu `(a b)`
 6. Die Zeichen `` ' ? ` `` und `,` innerhalb von Ausdrücken sind unzulässig.
@@ -146,9 +138,106 @@ Legende zur Notation:
 
 | Name | Eingabetypen | Ausgabetypen | Beschreibung | Version | Definition |
 | ---- | ------------ | ------------ | ------------ | ------- | ---------- |
+| Kontextprimitive | | | | | |
 | get-primitives | V | L | Liste der Bezeichner aller primitiven Funktionen | | |
 | get-context | V | M | Aktueller Kontext | neu | |
 | set-context | M | V / E | Überschreibt den aktuellen Kontext | neu | |
+| new-subcontext | E | E | Evaluiert Ei in einem neuen Unterkontext | neu | |
+| put-prop | M E1 E2 | M | Fügt in M den Wert E2 für den Schlüssel E1 ein | neu |  |
+| get-prop | M E | E | Wert des Schlüssels Ei in M | neu |  |
+| remove-prop | M E | M | Entfernt das E in M | neu |  |
+| context-of | E | M | Kontext, der den Schlüssel E definiert | neu |  |
+| coalesce | E1 E2 | E | Gibt E1 zurück, sofern dieses nicht null ist, sonst E2 | neu (Elvis-Operator) |  |
+| Kontrollprimitive |  |  |  |  |  |
+| get-version | V | S | STP-Version | neu |  |
+| date-and-time | V | L | Aktuelle Zeit im Format `(Date-And-Time Y M D h m s)` |  |  |
+| current-time-millis | V | N | Aktuelle Zeit in Millisekunden | neu |  |
+| Parsingfunktionen |  |  |  |  |  |
+| tokenize | S | L | Liste von Tokens | neu |  |
+| parse | S | E | Parst S | neu |  |
+| Kontrollfunktionen |  |  |  |  |  |
+| list | E... | L | Liste aller evaluierten E... |  |  |
+| copy-deep | E | E | Gibt eine Tiefenkopie des evaluierten Ei zurück |  |  |
+| quote | E | E | Ei in Rohform |  |  |
+| eval | E | E | Evaluiertes Ei |  |  |
+| quasiquote | E | E | Wie quote, nur dass innere Ausdrücke mit unquote evaluiert werden |  |  |
+| unquote | E | E | Evaluiertes Ei |  |  |
+| ignore | E... | V | Dient als Kommentar |  |  |
+| is-atom | E | B | Ist E ein Atom? |  |  |
+| type-of | E | S | Name des Datentyps von E |  |  |
+| instanceof | E S | B | Hat E den Datentyp S ? |  |  |
+| return | E | E | Zur Zeit wie id. Bitte nur dort verwenden, wo eine Funktion abgebrochen werden soll. |  |  |
+| id | E | E | Identitätsfunktion |  |  |
+| exit | V | V | Beendet das Skript |  |  |
+| Konstruktoren |  |  |  |  |  |
+| Error |  | Er |  |  |  |
+| Function |  | F |  |  |  |
+| Map |  | M |  |  |  |
+| Object |  | M |  |  |  |
+| Pair |  | L |  |  |  |
+| List |  | L |  |  |  |
+| Rational |  | Q |  |  |  |
+| as-list | St | L | Wandelt St in seine Listendarstellung um |  |  |
+| String |  | S |  |  |  |
+| Kontrollfunktionen |  |  |  |  |  |
+| cond | L(L(B E)...) | E | Prüft, ob ein B der Paare wahr ist und gibt das entsprechende E aus. Ist keine wahr, wird false ausgegeben |  |  |
+| if | B E1 E2 | E | Wenn B wahr ist, wird E1 ausgegeben, sonst E2 |  |  |
+| while | B E | E | E wird evaluiert, solange B wahr ist. Das letzte Ergebnis wird ausgegeben |  |  |
+| for | E1 B E2 E3 | E | Evaluiert E1. Evaluiert danach solange E3 und dann E2, wie B wahr ist |  |  |
+| begin | E... | E | Evaluiert nacheinander alle E...i und gibt letztes Ergebnis aus | umbenannt |  |
+| pipe | E [F1...Fn] | E | Übergibt E als erstes Argument an F1 und deren Ergebnis als erstes Argument an F2 bis Fn.<br />Das Ergebnis von Fn ist das Ergebnis von pipe.<br />Statt F darf auch E benutzt werden, wobei sich hier quotierte E empfehlen. Dann wird x als Resultat der vorangegangenen Funktion definiert. | neu |  |
+| Vergleiche |  |  |  |  |  |
+| = | E1 E2...En | B | Sind alle E2...En gleich E1 ? |  |  |
+| != | E1 E2...En | B | Sind alle E2...En ungleich E1 ? |  |  |
+| > | E1 E2...En | B | Ist E1 größer als alle E2...En ? |  |  |
+| < | E1 E2...En | B | Ist E1 kleiner als alle E2...En ? |  |  |
+| and | B... | B | Sind alle B... wahr? |  |  |
+| or | B... | B | Ist eines der B... wahr? |  |  |
+| not | B | B | Ist B falsch? |  |  |
+| assert | B | B(true) / Er | Wenn Bi wahr ist, wird wahr ausgegeben, andernfalls ein Fehler | neu |  |
+| is-identical | E... | B | Sind alle E... identisch? |  |  |
+| Bitweise Primitive |  |  |  |  |  |
+| bitand | Z1 Z2 | Z | Und der Bits von Z1 und Z2 |  |  |
+| bitior | Z1 Z2 | Z | Inklusives Oder der Bits von Z1 und Z2 |  |  |
+| bitxor | Z1 Z2 | Z | Exklusives Oder der Bits von Z1 und Z2 |  |  |
+| bitnor | Z1 Z2 | Z | Nicht Oder der Bits von Z1 und Z2 |  |  |
+| biteqv | Z1 Z2 | Z | Äquivalenz der Bits von Z1 und Z2 |  |  |
+| bitash | Z1 Z2 | Z | Arithmetische Verschiebung der Bits von Z1 um Z2 Stellen |  |  |
+| bitlsh | Z1 Z2 | Z | Logische Verschiebung der Bits von Z1 um Z2 Stellen |  |  |
+| bitcount | Z | Z | Anzahl aller 1-Bits in Zi |  |  |
+| bitnot | Z | Z | Negiert die Bits von Zi |  |  |
+| Arithmetik |  |  |  |  |  |
+| + | Q... | Q | Summiert alle Qs |  |  |
+| - | Q1 ... Qn | Q | Subtrahiert Q2 ... Qn von Q1 |  |  |
+| * | Q... | Q | Multipliziert alle Qs |  |  |
+| / | Q... | Q / Er | Dividiert Q1 durch Q2 ... Qn |  |  |
+| power | Q... | Q | Q1 hoch Q2 ... hoch Qn.<br />Nota bene: *(sqrt x) = (power x 1/2) | neu |  |
+| truncate | Q | Z | Entfernt den Nachkommaanteil von Q |  |  |
+| sin | Q | Q | Sinus von Qi |  |  |
+| cos | Q | Q | Kosinus von Qi |  |  |
+| tan | Q | Q | Tangens von Qi |  |  |
+| asin | Q | Q | Arcus-Sinus von Qi |  |  |
+| acos | Q | Q | Arcus-Kosinus von Qi |  |  |
+| atan | Q | Q | Arcus-Tangens von Qi |  |  |
+| abs | Q | Q | Betrag von Qi | neu |  |
+| ceiling | Q | Q | Aufgerundetes Qi | neu |  |
+| floor | Q | Q | Abgerundetes Qi | neu |  |
+| log | [Q1]:10 Q2 | Q | Logarithmus von Q2 zur Basis Q1 | neu |  |
+| round | Q | Q | Kaufmännisch gerundetes Qi | neu |  |
+| max | Q... | Q | Größter Wert von Q... | neu |  |
+| min | Q... | Q | Kleinster Wert von Q... | neu |  |
+| mod | Q1 Q2 | Q | Rest der Division Q1 durch Q2 | neu |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
+|  |  |  |  |  |  |
 
 
 <table border="1">
@@ -162,513 +251,9 @@ Legende zur Notation:
             <td>DEFINITION</td>
         </tr>
     </thead>
-    <tbody class="control-functions">
-        <tr class="grouplabel"><th colspan="5">Contextfunktionen</td></tr>
-        <tr>
-            <td>get-primitives</td>
-            <td>V</td>
-            <td>L</td>
-            <td>Liste der Bezeichner aller primitiven Funktionen</td>
-            <td>umbenannt</td>
-        </tr><tr>
-            <td>get-context</td>
-            <td>V</td>
-            <td>M</td>
-            <td>Aktueller Kontext</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>set-context</td>
-            <td>M</td>
-            <td>V / E</td>
-            <td>&Uuml;berschreibt den aktuellen Kontext</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>new-subcontext</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Evaluiert Ei in einem neuen Unterkontext</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>put-prop</td>
-            <td>M E1 E2</td>
-            <td>M</td>
-            <td>F&uuml;gt in M den Wert E2 f&uuml;r den Schl&uuml;ssel E1 ein</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>get-prop</td>
-            <td>M E</td>
-            <td>E</td>
-            <td>Wert des Schl&uuml;ssels Ei in M</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>remove-prop</td>
-            <td>M E</td>
-            <td>M</td>
-            <td>Entfernt das E in M/td>
-            <td>neu</td>
-        </tr><tr>
-            <td>context-of</td>
-            <td>E</td>
-            <td>M</td>
-            <td>Kontext der den Schl&uuml;ssel E definiert</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>coalesce</td>
-            <td>E1 E2</td>
-            <td>E</td>
-            <td>Gibt E1 zur&uuml;ck, sofern dieses nicht null ist, sonst E2</td>
-            <td>neu (Elvis-Operator)</td>
-        </tr>
-    </tbody>
-    <tbody class="control-functions">
-        <tr class="grouplabel"><th colspan="5">Sprachfunktionen</td></tr>
-        <tr>
-            <td>get-version</td>
-            <td>V</td>
-            <td>S</td>
-            <td>STP-Version</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>date-and-time</td>
-            <td>V</td>
-            <td>L</td>
-            <td>Aktuelle Zeit im Format<br /><code>(Date-And-Time Y M D h m s)</code></td>
-            <td>neu</td>
-        </tr><tr>
-            <td>current-time-millis</td>
-            <td>V</td>
-            <td>N</td>
-            <td>Aktuelle Zeit in Millisekunden</td>
-            <td>neu</td>
-        </tr>
-        <tr class="semanticbreak"><th colspan="5">.</td></tr>
-        <tr>
-            <td>tokenize</td>
-            <td>S</td>
-            <td>L</td>
-            <td>Liste von Tokens</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>is-valid-expression</td>
-            <td>S</td>
-            <td>B</td>
-            <td>Ist S ein valider Ausdruck?</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>parse</td>
-            <td>S</td>
-            <td>E</td>
-            <td>Parst S</td>
-            <td>neu</td>
-        </tr>
-        <tr class="semanticbreak"><th colspan="5">.</td></tr>
-        <tr>
-            <td>list</td>
-            <td>E...</td>
-            <td>L</td>
-            <td>Liste aller evaluierten E...</td>
-        </tr><tr>
-            <td>copy-deep</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Gibt eine Tiefenkopie des evaluierten Ei zur&uuml;ck</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>quote</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Ei in Rohform</td>
-        </tr><tr>
-            <td>eval</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Evaluiertes Ei</td>
-        </tr><tr>
-            <td>quasiquote</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Wie quote, nur dass innere Ausdr&uuml;cke mit unquote evaluiert werden</td>
-        </tr><tr>
-            <td>unquote</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Evaluiertes Ei</td>
-        </tr><tr>
-            <td>ignore</td>
-            <td>E...</td>
-            <td>V</td>
-            <td>Dient als Kommentar</td>
-        </tr><tr>
-            <td>is-atom</td>
-            <td>E</td>
-            <td>B</td>
-            <td>Ist E ein Atom?</td>
-        </tr><tr>
-            <td>type-of</td>
-            <td>E</td>
-            <td>S</td>
-            <td>Name des Datentyps von E</td>
-        </tr><tr>
-            <td>instanceof</td>
-            <td>E S</td>
-            <td>B</td>
-            <td>Hat E den Datentyp S ?</td>
-            <td>neu</td>
-        </tr><tr>
-            <td>return</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Zur Zeit wie id. Bitte nur dort verwenden, wo eine Funktion abgebrochen werden soll.</td>
-        </tr><tr>
-            <td>id</td>
-            <td>E</td>
-            <td>E</td>
-            <td>Identit&auml;tsfunktion</td>
-            <td></td>
-            <td>corelib</td>
-        </tr><tr>
-            <td>exit</td>
-            <td>V</td>
-            <td>V</td>
-            <td>Beendet das Skript</td>
-            <td>neu</td>
-        </tr>
-    </tbody>
-<tbody class="control-functions">
-    <tr class="grouplabel"><th colspan="5">Typkonstruktoren</td></tr>
-    <tr>
-        <td>Error</td>
-        <td></td>
-        <td>Er</td>
-        <td></td>
-    </tr><tr>
-        <td>Function</td>
-        <td></td>
-        <td>F</td>
-        <td></td>
-        <td>umbenannt</td>
-    </tr><tr>
-        <td>lambda</td>
-        <td></td>
-        <td>F</td>
-        <td>Wie Function</td>
-        <td>neu</td>
-        <td>corelib</td>
-    </tr><tr>
-        <td>Map</td>
-        <td></td>
-        <td>M</td>
-        <td></td>
-        <td>neu</td>
-    </tr><tr>
-        <td>Object</td>
-        <td></td>
-        <td>M</td>
-        <td>Wie Map</td>
-        <td>neu</td>
-        <td>corelib</td>
-    </tr><tr>
-        <td>Pair</td>
-        <td></td>
-        <td>P</td>
-        <td></td>
-        <td>neu</td>
-    </tr><tr>
-        <td>cons</td>
-        <td></td>
-        <td>P</td>
-        <td>Wie Pair</td>
-        <td>neu</td>
-        <td>corelib</td>
-    </tr><tr>
-        <td>Array</td>
-        <td></td>
-        <td>A</td>
-        <td></td>
-        <td>neu</td>
-    </tr><tr>
-        <td>List</td>
-        <td></td>
-        <td>L</td>
-        <td></td>
-    </tr><tr>
-        <td>Rational</td>
-        <td></td>
-        <td>Q</td>
-        <td></td>
-        <td>neu</td>
-    </tr><tr>
-        <td>as-list</td>
-        <td>St</td>
-        <td>L</td>
-        <td>Wandelt St in ihre Listendarstellung um</td>
-    </tr><tr>
-        <td>String</td>
-        <td></td>
-        <td>S</td>
-        <td></td>
-    </tr>
-</tbody>
-<tbody class="control-functions">
-    <tr class="grouplabel"><th colspan="5">Kontrollstrukturen, Verzweigungen, Schleifen</td></tr>
-    <tr>
-        <td>cond</td>
-        <td>L(P(B E))</td>
-        <td>E</td>
-        <td>Pr&uuml;ft, ob ein B der Paare wahr ist und gibt das entsprechende E aus. Ist keine wahr, wird false ausgegeben</td>
-    </tr><tr>
-        <td>if</td>
-        <td>B E1 E2</td>
-        <td>E</td>
-        <td>Wenn B wahr ist, wird E1 ausgegeben, sonst E2</td>
-    </tr><tr>
-        <td>while</td>
-        <td>B E</td>
-        <td>E</td>
-        <td>E wird evaluiert, solange B wahr ist. Das letzte Ergebnis wird ausgegeben</td>
-    </tr><tr>
-        <td>for</td>
-        <td>E1 B E2 E3</td>
-        <td>E</td>
-        <td>Evaluiert E1. Evaluiert danach solange E3 und dann E2, wie B wahr ist</td>
-    </tr><tr>
-        <td>begin</td>
-        <td>E...</td>
-        <td>E</td>
-        <td>Evaluiert nacheinander alle E...i und gibt letztes Ergebnis aus</td>
-        <td>umbenannt</td>
-    </tr><tr>
-        <td>pipe</td>
-        <td>E [F1...Fn]</td>
-        <td>E</td>
-        <td>&Uuml;bergibt E als erstes Argument an F1 und deren Ergebnis als erstes Argument an F2 bis Fn.<br />Das Ergebnis von Fn ist das Ergebnis von pipe.<br />Statt F darf auch E benutzt werden, wobei sich hier quotierte E empfehlen. Dann wird x als Resultat der vorangegangenen Funktion definiert.</td>
-        <td>neu</td>
-    </tr>
-</tbody>
-<tbody class="math-functions">
-    <tr class="grouplabel"><th colspan="5">Vergleiche & Bedingungen</td></tr>
-    <tr>
-        <td>=</td>
-        <td>E1 E2...En</td>
-        <td>B</td>
-        <td>Sind alle E2...En gleich E1 ?</td>
-    </tr><tr>
-        <td>!=</td>
-        <td>E1 E2...En</td>
-        <td>B</td>
-        <td>Sind alle E2...En ungleich E1 ?</td>
-    </tr><tr>
-        <td>&gt;</td>
-        <td>E1 E2...En</td>
-        <td>B</td>
-        <td>Ist E1 gr&ouml;&szlig;er als alle E2...En ?</td>
-    </tr><tr>
-        <td>&lt;</td>
-        <td>E1 E2...En</td>
-        <td>B</td>
-        <td>Ist E1 kleiner als alle E2...En ?</td>
-    </tr><tr>
-        <td>and</td>
-        <td>B...</td>
-        <td>B</td>
-        <td>Sind alle B...i wahr?</td>
-    </tr><tr>
-        <td>or</td>
-        <td>B...</td>
-        <td>B</td>
-        <td>Ist eines von B...i wahr?</td>
-    </tr><tr>
-        <td>not</td>
-        <td>B</td>
-        <td>B</td>
-        <td>Negiertes Bi</td>
-    </tr><tr>
-        <td>assert</td>
-        <td>B</td>
-        <td>B(true) | Er</td>
-        <td>Wenn Bi wahr ist, wird wahr ausgegeben, andernfalls ein Fehler</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>is-null</td>
-        <td>E</td>
-        <td>B</td>
-        <td>Ist E null?</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>not-null</td>
-        <td>E</td>
-        <td>B</td>
-        <td>Ist E nicht null?</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>is-identical</td>
-        <td>E...</td>
-        <td>B</td>
-        <td>Sind alle E... identisch?</td>
-        <td>neu</td>
-    </tr>
-</tbody>
-<tbody class="math-functions">
-    <tr class="grouplabel"><th colspan="5">Bitweise Operationen</td></tr>
-    <tr>
-        <td>bitand</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>Und der Bits von Z1 und Z2</td>
-    </tr><tr>
-        <td>bitior</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>Inklusives Oder der Bits von Z1 und Z2</td>
-    </tr><tr>
-        <td>bitxor</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>Exklusives Oder der Bits von Z1 und Z2</td>
-    </tr><tr>
-        <td>bitnor</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>Nicht Oder der Bits von Z1 und Z2</td>
-    </tr><tr>
-        <td>biteqv</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>&Auml;quivalenz der Bits von Z1 und Z2</td>
-    </tr><tr>
-        <td>bitash</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>Arithmetische Verschiebung der Bits von Z1 um Z2 Stellen</td>
-    </tr><tr>
-        <td>bitlsh</td>
-        <td>Z1 Z2</td>
-        <td>Z</td>
-        <td>Logische Verschiebung der Bits von Z1 um Z2 Stellen</td>
-    </tr><tr>
-        <td>bitcount</td>
-        <td>Z</td>
-        <td>Z</td>
-        <td>Anzahl aller 1-Bits in Zi</td>
-    </tr><tr>
-        <td>bitnot</td>
-        <td>Z</td>
-        <td>Z</td>
-        <td>Negiert die Bits von Zi</td>
-    </tr>
-</tbody>
 <tbody class="math-functions">
     <tr class="grouplabel"><th colspan="5">Arithmetik</td></tr>
     <tr>
-        <td>+</td>
-        <td>Q...</td>
-        <td>Q</td>
-        <td>Summiert alle Qs</td>
-    </tr><tr>
-        <td>-</td>
-        <td>Q1 ... Qn</td>
-        <td>Q</td>
-        <td>Subtrahiert Q2 ... Qn von Q1</td>
-    </tr><tr>
-        <td>*</td>
-        <td>Q...</td>
-        <td>Q</td>
-        <td>Multipliziert alle Qs</td>
-    </tr><tr>
-        <td>/</td>
-        <td>Q1 ... Qn</td>
-        <td>Q</td>
-        <td>Dividiert Q1 durch Q2 ... Qn</td>
-    </tr><tr>
-        <td>power</td>
-        <td>Q...</td>
-        <td>Q</td>
-        <td>Q1 hoch Q2 ... hoch Qn.<br />Nota bene: *(sqrt x) = (power x 1/2)</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>truncate</td>
-        <td>Q</td>
-        <td>Z</td>
-        <td>Entfernt den Nachkommaanteil von Q</td>
-    </tr><tr>
-        <td>sin</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Sinus von Qi</td>
-    </tr><tr>
-        <td>cos</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Kosinus von Qi</td>
-    </tr><tr>
-        <td>tan</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Tangens von Qi</td>
-    </tr><tr>
-        <td>asin</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Arcus-Sinus von Qi</td>
-    </tr><tr>
-        <td>acos</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Arcus-Kosinus von Qi</td>
-    </tr><tr>
-        <td>atan</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Arcus-Tangens von Qi</td>
-    </tr><tr>
-        <td>abs</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Betrag von Qi</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>ceiling</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Aufgerundetes Qi</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>floor</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Abgerundetes Qi</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>log</td>
-        <td>[Q1]:10 Q2</td>
-        <td>Q</td>
-        <td>Logarithmus von Q2 zur Basis Q1</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>round</td>
-        <td>Q</td>
-        <td>Q</td>
-        <td>Kaufm&auml;nnisch gerundetes Qi</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>max</td>
-        <td>Q...</td>
-        <td>Q</td>
-        <td>Gr&ouml;&szlig;ter Wert von Q...</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>min</td>
-        <td>Q...</td>
-        <td>Q</td>
-        <td>Kleinster Wert von Qi</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>mod</td>
-        <td>Q1 Q2</td>
-        <td>Q</td>
-        <td>Rest der Division Q1 durch Q2</td>
-        <td>neu</td>
-    </tr><tr>
         <td>max-num</td>
         <td>V</td>
         <td>N</td>
