@@ -154,6 +154,7 @@ Legende zur Notation:
 | current-time-millis | V | N | Aktuelle Zeit in Millisekunden | neu |  |
 | Parsingfunktionen |  |  |  |  |  |
 | tokenize | S | L | Liste von Tokens | neu |  |
+| is-valid-expression | S | B | Ist S ein valider Ausdruck? | neu |  |
 | parse | S | E | Parst S | neu |  |
 | Kontrollfunktionen |  |  |  |  |  |
 | list | E... | L | Liste aller evaluierten E... |  |  |
