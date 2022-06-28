@@ -47,6 +47,7 @@ gleichbedeutend mit
 Es wird sich vorbehalten, diesen Zeichen in diesem Zusammenhang in Zukunft eine tatsächliche syntaktische Bedeutung/Erfordernis zu verleihen.
 In allen anderen Zusammenhängen (id est Ausdrücke, die nicht Bestandteil eines Mapkonstruktors sind) darf der Parser Ausdrücke ablehnen, die mit diesen beiden Zeichen enden.
 11. Sofern nicht anders bestimmt, evaluieren Ausdrücke zu sich selbst.
+12. `true`, `false`, `null` und `void` sind Literale, die jeweils für die booleschen Werte wahr und falsch stehen, sowie für den Nichtswert (null) und den Leerwert (void)
 
 ## Blockausdrücke
 
@@ -109,13 +110,16 @@ Für den Aufruf von Funktionen in Form einer Funktionsliste mit Beschränkungen 
 1. Der Indexoperator `a[b]` entspricht `(get a b)`
 2. Der Mitgliedsoperator `a.b` entspricht `(get-prop a b)`
 3. Der Kurzfunktionsausdruck `{A... -> B...}` entspricht `(Function (A...) (begin B...))`
-4. Ein Ausdruck, der mit ... beginnt, wird transformiert zu ...
+4. Der Bereichsoperator `a..b` entstpricht `(range a b)`
+5. Der Elvisoperator `a?:b` entspricht `(coalesce a b)`
+6. Der Operator der sicheren Navigation `a?.b` entspricht `(safe-prop a b)`
+7. Ein Ausdruck, der mit ... beginnt, wird transformiert zu ...
     - `'x` -> `(quote x)`
     - `?x` -> `(eval x)`
-    - ```x`` -> `(quasiquote x)`
+    - `` `x `` -> `(quasiquote x)`
     - `,x` -> `(unquote x)`
-5. `(a . b)` wird transformiert zu `(a b)`
-6. Die Zeichen `` ' ? ` `` und `,` innerhalb von Ausdrücken sind unzulässig.
+8. `(a . b)` wird transformiert zu `(a b)`
+9. Die Zeichen `` ' ? ` `` und `,` innerhalb von Ausdrücken sind unzulässig.
 
 ## Grundfunktionen
 
@@ -234,6 +238,7 @@ Legende zur Notation:
 | min-int | V | Z | Minimaler durch den Typ Number darstellbarer Integer | neu |  |
 | numerator | Q | Z | Zähler der Bruchdarstellung von Q | neu |  |
 | denominator | Q | N | Nenner der Bruchdarstellung von Q | neu |  |
+| Symbole & Funktionen |  |  |  |  |  |
 | def | schluessel1=E wert1=E ... schluesselN=E wertN=E | E | Bindet Werte an Schlüssel im aktuellen Kontext |  |  |
 | overload | schluessel1=E wert1=F ... schluesselN=E wertN=F | E | Sofern der Schlüssel bereits in einem höheren oder diesem Kontext definiert ist, wird dieser mit einem neuen Wert überschieben. Andernfalls wird der Wert an einen neuen Schlüssel im aktuellen Kontext gebunden |  |  |
 | overwrite | schluessel1=E wert1=E ... schluesselN=E wertN=E | E | Sofern der Schlüssel bereits in einem höheren oder diesem Kontext definiert ist, wird dieser mit einem neuen Wert überschieben. Andernfalls wird der Wert an einen neuen Schlüssel im aktuellen Kontext gebunden |  |  |
@@ -241,6 +246,7 @@ Legende zur Notation:
 | call | F args=E/L | E | Ruft die Funktion F mit den Argumenten args auf |  |  |
 | foreach | St F | L | Wendet F auf jedes Element in St an. Dabei sind die übergebenen Argumente: Wert, Index, Struktur | geändert |  |
 | multi-call | F(>= A1...An) L1...Ln | L | Evaluiert F so viele Male, wie die Länge der längsten Liste. Sei Index ein Zähler der Durchläufe, so sind die an F übergebenen Argumente im Index-ten Durchlauf L1[Index] bis Ln[Index] sowie Index. Das Ergebnis von multi-call ist eine Liste aller Resultate | neu |  |
+| Listen |  |  |  |  |  |
 | get     | L N | E | Ntes Element in L |  |  |
 | length  | L | N | Anzahl der Elemente von L |  |  |
 | add     | L [N] E | L | Erweitert L um E [an Stelle N]  |  |  |
@@ -256,6 +262,7 @@ Legende zur Notation:
 | flatten | L | L | Li wird als Baumstruktur angesehen. Lo sind dann die Blätter derselben | neu |  |
 | keep | L F(value=E index=N list=L)->B | L | Liste aller Elemente von Li, für die F true ist | neu |  |
 | find | L F(value=E index=N list=L)->B | N | Index des ersten Elementes von Li, für das F true ist. Existiert ein solches nicht, wird -1 returnt | verändert |  |
+| Zeichenketten |  |  |  |  |  |
 | code-points | S | L(N) | Liste aller Unicode-Codepoints von S | neu |  |
 | codes-to-string | L(N) | S | Fügt alle Unicode-Codepoints zu einem S zusammen | neu |  |
 | chars | S | L(S) | Liste aller Zeichen von S | verändert |  |
@@ -265,6 +272,7 @@ Legende zur Notation:
 | split | S1 S2 | L(S) | Spaltet S1 an jedem S2 |  |  |
 | regex | S1 S2 S3 | S | Ersetzt in S3 jeden Text, für den S1 zutrifft, durch S2 |  |  |
 | decimal | Q | S | Dezimale Repräsentation von Q. Aus 1/4 wird "0.75" | neu |  |
+| Eingabe/Ausgabe |  |  |  |  |  |
 | include | E... | E | Liest Skriptdateien, deren Namen in E...i angegeben werden, parst und evaluiert sie. Letztes Ergebnis wird ausgegeben |  |  |
 | io-read-string | E | S | Liest Datei mit dem Namen E ein und gibt deren Text aus.<br /> Ist E eine L(I("url") S), dann wird der textuelle Inhalt der Website mit der URL S ausgegeben |  |  |
 | io-read-bytes | E | L(N) | Liest Datei mit dem Namen E ein und gibt eine Liste der Bytes aus |  |  |
