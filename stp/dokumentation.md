@@ -336,7 +336,7 @@ Daher ist es wichtig, wenn man eine Variable selbst und nicht ihren Wert meint, 
 
 - [Scheme](http://www.scheme-reports.org/)
 - [JavaScript](https://www.ecma-international.org/publications-and-standards/standards/ecma-262/)
-- [Java](https://www.oracle.com/java/)
+- [Kotlin](https://kotlinlang.org/)
 - [Snap!](https://snap.berkeley.edu/)
 - [GP](https://gpblocks.org/)
 - [Lua](https://www.lua.org/)
