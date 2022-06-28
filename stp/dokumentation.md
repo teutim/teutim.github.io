@@ -228,298 +228,50 @@ Legende zur Notation:
 | max | Q... | Q | Größter Wert von Q... | neu |  |
 | min | Q... | Q | Kleinster Wert von Q... | neu |  |
 | mod | Q1 Q2 | Q | Rest der Division Q1 durch Q2 | neu |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-|  |  |  |  |  |  |
-
-
-<table border="1">
-    <thead>
-        <tr>
-            <th>NAME</th>
-            <th>EINGABETYPEN</th>
-            <th>AUSGABETYP</th>
-            <th>BESCHREIBUNG</th>
-            <th>VERSION</th>
-            <td>DEFINITION</td>
-        </tr>
-    </thead>
-<tbody class="math-functions">
-    <tr class="grouplabel"><th colspan="5">Arithmetik</td></tr>
-    <tr>
-        <td>max-num</td>
-        <td>V</td>
-        <td>N</td>
-        <td>Maximale durch den Typ Number darstellbare Zahl</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>min-num</td>
-        <td>V</td>
-        <td>N</td>
-        <td>Minimale durch den Typ Number darstellbare Zahl</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>max-int</td>
-        <td>V</td>
-        <td>N</td>
-        <td>Maximaler durch den Typ Number darstellbarer Integer<br />(I.d.R gleich Javas Integer.MAX_VALUE)</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>min-int</td>
-        <td>V</td>
-        <td>N</td>
-        <td>Minimaler durch den Typ Number darstellbarer Integer<br />(I.d.R gleich Javas Integer.MIN_VALUE)</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>numerator</td>
-        <td>Q</td>
-        <td>N</td>
-        <td>Z&auml;hler der Bruchdarstellung von Q</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>denominator</td>
-        <td>Q</td>
-        <td>N</td>
-        <td>Nenner der Bruchdarstellung von Q</td>
-        <td>neu</td>
-    </tr>
-</tbody>
-<tbody class="symbols-and-functions">
-    <tr class="grouplabel"><th colspan="5">Symbole & Funktionen</td></tr>
-    <tr>
-        <td>def</td>
-        <td>schluessel1=E wert1=E ... schluesselN=E wertN=E</td>
-        <td>E</td>
-        <td>Bindet Werte an Schl&uuml;ssel im aktuellen Kontext</td>
-    </tr><tr>
-        <td>overload</td>
-        <td>schluessel1=E wert1=F ... schluesselN=E wertN=F</td>
-        <td>E</td>
-        <td>Sofern der Schl&uuml;ssel bereits in einem h&ouml;heren oder diesem Kontext definiert ist, wird dieser mit einem neuen Wert &uuml;berschieben. Andernfalls wird der Wert an einen neuen Schl&uuml;ssel im aktuellen Kontext gebunden.</td>
-    </tr><tr>
-        <td>overwrite</td>
-        <td>schluessel1=E wert1=E ... schluesselN=E wertN=E</td>
-        <td>E</td>
-        <td>Sofern der Schl&uuml;ssel bereits in einem h&ouml;heren oder diesem Kontext definiert ist, wird dieser mit einem neuen Wert &uuml;berschieben. Andernfalls wird der Wert an einen neuen Schl&uuml;ssel im aktuellen Kontext gebunden.</td>
-    </tr><tr>
-        <td>let</td>
-        <td>schluessel1=E wert1=E ... schluesselN=E wertN=E ausdruck=E</td>
-        <td>E</td>
-        <td>Bindet Werte an Schl&uuml;ssel in einem Unterkontext und gibt Resultat von ausdruck zur&uuml;ck</td>
-    </tr><tr>
-        <td>call</td>
-        <td>F args=E/L</td>
-        <td>E</td>
-        <td>Ruft die Funktion F mit den Argumenten args auf</td>
-    </tr><tr>
-        <td>foreach</td>
-        <td>St F</td>
-        <td>L</td>
-        <td>Wendet F auf jedes Element in St an. Dabei sind die &uuml;bergebenen Argumente: Wert, Index, Struktur</td>
-        <td>ge&auml;ndert</td>
-    </tr><tr>
-        <td>multi-call</td>
-        <td>F(>= A1...An) L1...Ln</td>
-        <td>L</td>
-        <td>Evaluiert F so viele Male, wie die L&auml;nge der l&auml;ngsten Liste. Sei Index ein Z&auml;hler der Durchl&auml;ufe, so sind die an F &uuml;bergebenen Argumente im Index-ten Durchlauf L1[Index] bis Ln[Index] sowie Index. Das Ergebnis von multi-call ist eine Liste aller Resultate</td>
-        <td>neu</td>
-    </tr>
-</tbody>
-<tbody class="list-functions">
-    <tr class="grouplabel"><th colspan="5">Listenoperationen</td></tr>
-    <tr>
-        <td>get</td>
-        <td>L N</td>
-        <td>E</td>
-        <td>Ntes Element in L</td>
-    </tr><tr>
-        <td>length</td>
-        <td>L</td>
-        <td>N</td>
-        <td>Anzahl der Elemente von L</td>
-    </tr><tr>
-        <td>add</td>
-        <td>L [N] E</td>
-        <td>L</td>
-        <td>Erweitert L um E [an Stelle N]</td>
-    </tr><tr>
-        <td>set</td>
-        <td>L N E</td>
-        <td>L</td>
-        <td>Setzt in L an Stelle N E ein</td>
-    </tr><tr>
-        <td>remove</td>
-        <td>L N</td>
-        <td>L</td>
-        <td>Entfernt N-tes Element in L</td>
-    </tr><tr>
-        <td>sublist</td>
-        <td>L N1 N2</td>
-        <td>L</td>
-        <td>Liste der Elemente N1 bis N2 von Li</td>
-    </tr><tr>
-        <td>random</td>
-        <td>L</td>
-        <td>E</td>
-        <td>Zuf&auml;lliges Element von L</td>
-    </tr><tr>
-        <td>range</td>
-        <td>[N1]:0 N2 {[N3]:1 != 0}</td>
-        <td>L</td>
-        <td>Eine Liste aller Zahlen in N3-er Schritten von N1 bis N2. Ist N3 negativ, so wird heruntergez&auml;hlt.</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>append</td>
-        <td>L...</td>
-        <td>L</td>
-        <td>Verbindet alle L... von links nach rechts zu einer Liste. Ist L... leer, so wird eine leere Liste ausgegeben.</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>sort</td>
-        <td>L F(a b)</td>
-        <td>L</td>
-        <td>Sortiert L durch Anwendung von F. F ist eine Funktion, die entweder -1 0 oder 1 ausgibt, abh&auml;ngig davon, ob a gleich/gr&ouml;&szlig;er/kleiner b ist</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>shuffle</td>
-        <td>L</td>
-        <td>L</td>
-        <td>Mischt L zuf&auml;llig</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>reverse</td>
-        <td>L</td>
-        <td>L</td>
-        <td>L r&uuml;ckw&auml;rts</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>flatten</td>
-        <td>L</td>
-        <td>L</td>
-        <td>Li wird als Baumstruktur angesehen. Lo sind dann die Bl&auml;tter derselben.</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>keep</td>
-        <td>L F(value=E index=N list=L)->B</td>
-        <td>L</td>
-        <td>Liste aller Elemente von Li, f&uuml;r die F true ist</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>find</td>
-        <td>L F(value=E index=N list=L)->B</td>
-        <td>N</td>
-        <td>Index des ersten Elementes von Li, f&uuml;r das F true ist. Existiert ein solches nicht, wird -1 returnt.</td>
-        <td>ver&auml;ndert</td>
-    </tr>
-</tbody>
-<tbody class="string-functions">
-    <tr class="grouplabel"><th colspan="5">Zeichenkettenoperationen</td></tr>
-    <tr>
-        <td>code-points</td>
-        <td>S</td>
-        <td>L(N)</td>
-        <td>Liste aller Unicode-Code-Points von S</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>codes-to-string</td>
-        <td>L(N)</td>
-        <td>S</td>
-        <td>F&uuml;gt alle Unicode-Code-Points zu einem S zusammen</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>chars</td>
-        <td>S</td>
-        <td>L(S)</td>
-        <td>Liste aller Zeichen von S</td>
-        <td>ver&auml;ndert</td>
-    </tr><tr>
-        <td>to-uppercase</td>
-        <td>S</td>
-        <td>S</td>
-        <td>Verwandelt S in Gro&szlig;buchstaben</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>to-lowercase</td>
-        <td>S</td>
-        <td>S</td>
-        <td>Verwandelt S in Kleinbuchstaben</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>join</td>
-        <td>E...</td>
-        <td>S</td>
-        <td>Wandelt jedes von E... in ein S um und verbindet diese</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>split</td>
-        <td>S1 S2</td>
-        <td>L(S)</td>
-        <td>Spaltet S1 an jedem S2</td>
-    </tr><tr>
-        <td>regex</td>
-        <td>S1 S2 S3</td>
-        <td>S</td>
-        <td>Ersetzt in S3 jeden Text, f&uuml;r den S1 zutrifft, durch S2</td>
-    </tr><tr>
-        <td>decimal</td>
-        <td>Q</td>
-        <td>S</td>
-        <td>Dezimale Repr&auml;sentation von Q. Aus 1/4 wird "0.75"</td>
-        <td>neu</td>
-    </tr>
-</tbody>
-<tbody class="io-functions">
-    <tr class="grouplabel"><th colspan="5">Eingabe-Ausgabe</td></tr>
-    <tr>
-        <td>include</td>
-        <td>E...</td>
-        <td>E</td>
-        <td>Liest Skriptdateien, deren Namen in E...i angegeben werden, parst und evaluiert sie. Letztes Ergebnis wird ausgegeben</td>
-    </tr><tr>
-        <td>io-read-string</td>
-        <td>E</td>
-        <td>S</td>
-        <td>Liest Datei mit dem Namen E ein und gibt deren Text aus.<br /> Ist E eine L(I("url") S), dann wird der textuelle Inhalt der Website mit der URL S ausgegeben.</td>
-    </tr><tr>
-        <td>io-read-bytes</td>
-        <td>E</td>
-        <td>L(N)</td>
-        <td>Liest Datei mit dem Namen E ein und gibt eine Liste der Bytes aus</td>
-    </tr><tr>
-        <td>printc</td>
-        <td>E</td>
-        <td>E</td>
-        <td>Wandelt E in einen String um und schreibt diesen in die Ausgabe</td>
-        <td>umbenannt</td>
-    </tr><tr>
-        <td>printv</td>
-        <td>E</td>
-        <td>E</td>
-        <td>Wandelt E in einen String um, wie er durch join entstehen w&uuml;rde, und schreibt diesen in die Ausgabe</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>input</td>
-        <td>E...</td>
-        <td>E</td>
-        <td>Ruft die Eingabe-Prozedur mit den Operanden als Argumente auf und gibt deren Ergebnis zur&uuml;ck</td>
-        <td>neu</td>
-    </tr><tr>
-        <td>output</td>
-        <td>E...</td>
-        <td>E</td>
-        <td>Ruft die Ausgabe-Prozedur mit den Operanden als Argumente auf und gibt deren Ergebnis zur&uuml;ck</td>
-        <td>neu</td>
-    </tr>
-</tbody>
-</table>
+| max-num | V | Z | Maximale durch den Typ Number darstellbare Zahl | neu |  |
+| min-num | V | Z | Minimale durch den Typ Number darstellbare Zahl | neu |  |
+| max-int | V | Z | Maximaler durch den Typ Number darstellbarer Integer | neu |  |
+| min-int | V | Z | Minimaler durch den Typ Number darstellbarer Integer | neu |  |
+| numerator | Q | Z | Zähler der Bruchdarstellung von Q | neu |  |
+| denominator | Q | N | Nenner der Bruchdarstellung von Q | neu |  |
+| def | schluessel1=E wert1=E ... schluesselN=E wertN=E | E | Bindet Werte an Schlüssel im aktuellen Kontext |  |  |
+| overload | schluessel1=E wert1=F ... schluesselN=E wertN=F | E | Sofern der Schlüssel bereits in einem höheren oder diesem Kontext definiert ist, wird dieser mit einem neuen Wert überschieben. Andernfalls wird der Wert an einen neuen Schlüssel im aktuellen Kontext gebunden |  |  |
+| overwrite | schluessel1=E wert1=E ... schluesselN=E wertN=E | E | Sofern der Schlüssel bereits in einem höheren oder diesem Kontext definiert ist, wird dieser mit einem neuen Wert überschieben. Andernfalls wird der Wert an einen neuen Schlüssel im aktuellen Kontext gebunden |  |  |
+| let | schluessel1=E wert1=E ... schluesselN=E wertN=E ausdruck=E | E | Bindet Werte an Schlüssel in einem Unterkontext und gibt Resultat von ausdruck zurück |  |  |
+| call | F args=E/L | E | Ruft die Funktion F mit den Argumenten args auf |  |  |
+| foreach | St F | L | Wendet F auf jedes Element in St an. Dabei sind die übergebenen Argumente: Wert, Index, Struktur | geändert |  |
+| multi-call | F(>= A1...An) L1...Ln | L | Evaluiert F so viele Male, wie die Länge der längsten Liste. Sei Index ein Zähler der Durchläufe, so sind die an F übergebenen Argumente im Index-ten Durchlauf L1[Index] bis Ln[Index] sowie Index. Das Ergebnis von multi-call ist eine Liste aller Resultate | neu |  |
+| get     | L N | E | Ntes Element in L |  |  |
+| length  | L | N | Anzahl der Elemente von L |  |  |
+| add     | L [N] E | L | Erweitert L um E [an Stelle N]  |  |  |
+| set     | L N E | L | Setzt in L an Stelle N E ein |  |  |
+| remove  | L N | L | Entfernt N-tes Element in L |  |  |
+| sublist | L N1 N2 | L | Liste der Elemente N1 bis N2 von Li |  |  |
+| random  | L | E | Zufälliges Element von L |  |  |
+| range   | [N1]:0 N2 {[N3]:1 != 0} | L | Eine Liste aller Zahlen in N3-er Schritten von N1 bis N2. Ist N3 negativ, so wird heruntergezählt | neu |  |
+| append  | L... | L | Verbindet alle L... von links nach rechts zu einer Liste. Ist L... leer, so wird eine leere Liste ausgegeben | neu |  |
+| sort    | L F(a b) | L | Sortiert L durch Anwendung von F. F ist eine Funktion, die entweder -1 0 oder 1 ausgibt, abh&auml;ngig davon, ob a gleich/größer/kleiner b ist | neu |  |
+| shuffle | L | L | Mischt L zufällig | neu |  |
+| reverse | L | L | L rückwärts | neu |  |
+| flatten | L | L | Li wird als Baumstruktur angesehen. Lo sind dann die Blätter derselben | neu |  |
+| keep | L F(value=E index=N list=L)->B | L | Liste aller Elemente von Li, für die F true ist | neu |  |
+| find | L F(value=E index=N list=L)->B | N | Index des ersten Elementes von Li, für das F true ist. Existiert ein solches nicht, wird -1 returnt | verändert |  |
+| code-points | S | L(N) | Liste aller Unicode-Codepoints von S | neu |  |
+| codes-to-string | L(N) | S | Fügt alle Unicode-Codepoints zu einem S zusammen | neu |  |
+| chars | S | L(S) | Liste aller Zeichen von S | verändert |  |
+| to-uppercase | S | S | S in Großbuchstaben | neu |  |
+| to-lowercase | S | S | S in Kleinbuchstaben | neu |  |
+| join | E... | S | Wandelt jedes von E... in ein S um und verbindet diese | neu |  |
+| split | S1 S2 | L(S) | Spaltet S1 an jedem S2 |  |  |
+| regex | S1 S2 S3 | S | Ersetzt in S3 jeden Text, für den S1 zutrifft, durch S2 |  |  |
+| decimal | Q | S | Dezimale Repräsentation von Q. Aus 1/4 wird "0.75" | neu |  |
+| include | E... | E | Liest Skriptdateien, deren Namen in E...i angegeben werden, parst und evaluiert sie. Letztes Ergebnis wird ausgegeben |  |  |
+| io-read-string | E | S | Liest Datei mit dem Namen E ein und gibt deren Text aus.<br /> Ist E eine L(I("url") S), dann wird der textuelle Inhalt der Website mit der URL S ausgegeben |  |  |
+| io-read-bytes | E | L(N) | Liest Datei mit dem Namen E ein und gibt eine Liste der Bytes aus |  |  |
+| printc | E | E | Wandelt E in einen String um und schreibt diesen in die Ausgabe | umbenannt |  |
+| printv | E | E | Wandelt E in einen String um, wie er durch join entstehen würde, und schreibt diesen in die Ausgabe | neu |  |
+| input | E... | E | Ruft die Eingabe-Prozedur mit den Operanden als Argumente auf und gibt deren Ergebnis zurück | neu |  |
+| output | E... | E | Ruft die Ausgabe-Prozedur mit den Operanden als Argumente auf und gibt deren Ergebnis zurück | neu |  |
 
 ## Beispiele
 
