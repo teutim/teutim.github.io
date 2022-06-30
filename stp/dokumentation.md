@@ -61,8 +61,8 @@ In allen anderen Zusammenhängen (id est Ausdrücke, die nicht Bestandteil eines
 2. Ein Funktionsaufruf ist eine Liste, deren erstes Element zu einer Funktion evaluiert. Beim Aufruf der Funktion werden dieser Argumente entsprechend ihren Parametern übergeben und die Liste von Ausdrücken der Funktion nacheinander interpretiert, wobei das letzte Resultat dieser Interpretationen das Resultat des Funktionsaufrufes ist.
 3. Ein Funktionsobjekt kann mit einem Literal beschrieben werden: `{P1 P2 ... Pn -> A1 A2 ... An}`, wobei Pi ein Parameter ist und Ai ein beliebiger Ausdruck.
 4. Innerhalb des Funktionsbauches ist `@args` als Liste aller übergebenen Argumente definiert.
-5. Als Funktion wird ebenfalls eine Liste von Funktionen behandelt. Hier wird bei einem Aufruf die erste Funktion ausgewählt,
-   deren Beschränkungen von den Argumenten des Aufrufes erfüllt werden.
+5. Eine Funktion kann ein Bündel mehrerer Funktionen sein. Hier wird bei einem Aufruf die erste Funktion ausgewählt,
+   deren Beschränkungen von den Argumenten des Aufrufes erfüllt werden. Ein Funktionsbündel wird mit `(Function F0 F1 ... Fn)` erzeugt, wobei Fi eine Funktion ist.
 
 ## Variablen
 
@@ -92,7 +92,7 @@ Es gibt folgende strukturierte primitive Datentypen:
 
 ## Die Rationale Zahl
 
-Rationale Zahlen (Verhältnisse zweier ganzer Zahlen) sind die Grundlage mathematischer Berechnungen in STP. STP akzeptiert jede Darstellung nach dem Schema a/b und -a/b , wobei a und b ganze Zahlen dargestellt in der Basis 10 und zwischen 0 und 2^31-1 sein müssen. Intern werden diese gekürzt und dafür gesorgt, dass der Nenner nie negativ ist. Dadurch ist das Vorzeichen des Zählers automatisch das Vorzeichen des gesamten Bruchs.
+Rationale Zahlen (Verhältnisse zweier ganzer Zahlen) sind die Grundlage mathematischer Berechnungen in STP. STP akzeptiert jede Darstellung nach dem Schema a/b und -a/b , wobei a und b ganze Zahlen dargestellt in der Basis 10 und zwischen 0 und 2^63-1 sein müssen. Intern werden diese gekürzt und dafür gesorgt, dass der Nenner nie negativ ist. Dadurch ist das Vorzeichen des Zählers automatisch das Vorzeichen des gesamten Bruchs.
 
 ## Beschränkungen und Funktionsüberladungen
 
