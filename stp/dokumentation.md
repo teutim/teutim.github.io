@@ -55,14 +55,18 @@ In allen anderen Zusammenhängen (id est Ausdrücke, die nicht Bestandteil eines
 2. Die Argumente eines Blocks werden von links nach rechts interpretiert, wobei Seiteneffekte früherer Argumente sich auf die Interpretation späterer Argumente auswirken können.
 3. Ein Block gibt sein letztes Argument interpretiert zurück.
 
-## Funktionen
+## Funktionen & Methoden
 
-1. Eine Funktion besteht aus einer Parameterliste und einer Liste von Ausdrücken (Funktionsbauch).
-2. Ein Funktionsaufruf ist eine Liste, deren erstes Element zu einer Funktion evaluiert. Beim Aufruf der Funktion werden dieser Argumente entsprechend ihren Parametern übergeben und die Liste von Ausdrücken der Funktion nacheinander interpretiert, wobei das letzte Resultat dieser Interpretationen das Resultat des Funktionsaufrufes ist.
-3. Ein Funktionsobjekt kann mit einem Literal beschrieben werden: `{P1 P2 ... Pn -> A1 A2 ... An}`, wobei Pi ein Parameter ist und Ai ein beliebiger Ausdruck.
-4. Innerhalb des Funktionsbauches ist `@args` als Liste aller übergebenen Argumente definiert.
-5. Eine Funktion kann ein Bündel mehrerer Funktionen sein. Hier wird bei einem Aufruf die erste Funktion ausgewählt,
-   deren Beschränkungen von den Argumenten des Aufrufes erfüllt werden. Ein Funktionsbündel wird mit `(Function F0 F1 ... Fn)` erzeugt, wobei Fi eine Funktion ist.
+1. Eine Funktion ist entweder eine Methode oder ein Bündel mehrerer Methoden.
+2. Eine Methode besteht aus einer Parameterliste und einer Liste von Ausdrücken (Methodenbauch).
+3. Ein Funktionsaufruf ist eine Liste, deren erstes Element zu einer Funktion evaluiert. Beim Aufruf der Funktion werden dieser Argumente entsprechend ihren Parametern übergeben und die Liste von Ausdrücken der Methode nacheinander interpretiert, wobei das letzte Resultat dieser Interpretationen das Resultat des Funktionsaufrufes ist.
+   1. Erhält eine Methode durch einen Funktionsaufruf weniger Argumente als ihre Parameter erwarten, so sind die fehlenden `void`.
+4. Ein Methodenobjekt kann mit einem Literal beschrieben werden: `{P1 P2 ... Pn -> A1 A2 ... An}`, wobei Pi ein Parameter ist und Ai ein beliebiger Ausdruck.
+5. Falls `@args` das einzige Element der Parameterliste ist, ist innerhalb des Methodenbauches `@args` als Liste aller übergebenen Argumente definiert.
+6. `@void` als einziges Element der Parameterliste kennzeichnet eine Methode, die keine Argumente akzeptiert.
+7. Ein Parameter kann den "Namen" `_` tragen, um zu kennzeichnen, dass er erwartet wird, aber in dem Methodenbauch keine Verwendung findet.
+8. Enthält eine Funktion mehr als eine Methode, dann wird bei einem Aufruf die erste Methode ausgewählt,
+   deren Beschränkungen von den Argumenten des Aufrufes erfüllt werden. Eine Funktion mit mehreren Methoden wird mit `(Function F0 F1 ... Fn)` erzeugt, wobei Fi eine Funktion ist.
 
 ## Variablen
 
@@ -100,10 +104,12 @@ Standardmäßig akzeptiert STP jeden Ausdruck als Funktionsargument und kann jed
 
 Beschränkungen sind beliebige Bedingungen, die von den Argumenten eines Funktionsaufrufes erfüllt werden müssen.
 Beispiel:
-`{(constrain x (= (mod x 2) 0)) -> x}`
+`{(constrain x (= (mod x 2) 0)) -> x}` bzw `{x:(= (mod x 2) 0) -> x}`
 Beschränkung für den Parameter x, die ausschließlich grade Zahlen als Argumente erlaubt.
 
 Für den Aufruf von Funktionen in Form einer Funktionsliste mit Beschränkungen gilt, dass alle in der Liste enthaltenen Funktionen auf Erfüllung der Bedingungen getestet werden. Erfüllen die Argumente alle Bedingungen einer Funktion, so wird diese ausgeführt. Wenn die Argumente die Bedingungen mehrerer benannter Funktionen erfüllen, so ist das Resultat das Ergebnis der ersten Funktion, die die Beschränkungen erfüllt. Gibt es keine Funktion, die die Bedingungen erfüllt, wird ein Fehler ausgegeben.
+
+Beschränkt werden kann jedes Element der Parameterliste einschließlich `_` und `@args`, nicht aber `@void`.
 
 ## Operatoren
 
@@ -309,6 +315,8 @@ Daher ist es wichtig, wenn man eine Variable selbst und nicht ihren Wert meint, 
 2. Fehlermeldungen und ihre Darstellungsform sind implementationsdefiniert.
 3. Die textuelle Darstellung von primitiven Datentypen ist implementationsdefiniert.
 4. Man sollte sich nicht auf Identitäten bei primitiven Datentypen verlassen.
+5. Funktionen mit leerer Parameterliste können sich entweder so verhalten, als sei `@void` implizit in dieser vorhanden oder als würde `@args` implizit in dieser vorhanden sein, ohne dass `@args` im Funktionsbauch definiert ist. (In diesem Falle würden überschüssige Argumente im Funktionsaufruf ignoriert werden.)
+Eine Implementation muss sich für eines der beiden Verhalten entscheiden.
 
 ### Undefiniertes Verhalten
 
@@ -317,6 +325,16 @@ Daher ist es wichtig, wenn man eine Variable selbst und nicht ihren Wert meint, 
 3. Es ist undefiniert, ob Ausdrücke ausgewertet werden, die das "Endergebnis" nicht beeinflussen.
 4. Das Verhalten bei Umdefinierung der Grundfunktionen ist undefiniert.
 5. Das Verhalten der sorted-Funktion, falls F einen Wert ausgibt, der nicht 0, 1, oder -1 ist.
+
+## Glossar
+
+- Objekt: Eine Map, die dazu dient, ein Objekt darzustellen
+- Parameter: Von einer Methode erwarteter Wert
+- Argument: An eine Methode übergebener Wert
+- Methode: Ausdrücke, die Argumente entgegennehmen
+- Funktion: Eine oder mehrere Methoden
+- Überladen: Einer Funktion eine Methode hinzufügen
+- Überschreiben: Den Wert eines Ausdrucks überschreiben
 
 ## Stilempfehlungen für Skriptdateien (unvollständig)
 
