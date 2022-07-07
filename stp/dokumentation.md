@@ -60,13 +60,14 @@ In allen anderen Zusammenhängen (id est Ausdrücke, die nicht Bestandteil eines
 1. Eine Funktion ist entweder eine Methode oder ein Bündel mehrerer Methoden.
 2. Eine Methode besteht aus einer Parameterliste und einer Liste von Ausdrücken (Methodenbauch).
 3. Ein Funktionsaufruf ist eine Liste, deren erstes Element zu einer Funktion evaluiert. Beim Aufruf der Funktion werden dieser Argumente entsprechend ihren Parametern übergeben und die Liste von Ausdrücken der Methode nacheinander interpretiert, wobei das letzte Resultat dieser Interpretationen das Resultat des Funktionsaufrufes ist.
-   1. Erhält eine Methode durch einen Funktionsaufruf weniger Argumente als ihre Parameter erwarten, so sind die fehlenden `void`.
+   1. Erhält eine Methode durch einen Funktionsaufruf weniger Argumente als ihre Parameter erwarten, so sind die fehlenden vom Wert `void`.
 4. Ein Methodenobjekt kann mit einem Literal beschrieben werden: `{P1 P2 ... Pn -> A1 A2 ... An}`, wobei Pi ein Parameter ist und Ai ein beliebiger Ausdruck.
-5. Falls `@args` das einzige Element der Parameterliste ist, ist innerhalb des Methodenbauches `@args` als Liste aller übergebenen Argumente definiert.
-6. `@void` als einziges Element der Parameterliste kennzeichnet eine Methode, die keine Argumente akzeptiert.
-7. Ein Parameter kann den "Namen" `_` tragen, um zu kennzeichnen, dass er erwartet wird, aber in dem Methodenbauch keine Verwendung findet.
-8. Enthält eine Funktion mehr als eine Methode, dann wird bei einem Aufruf die erste Methode ausgewählt,
+5. Enthält eine Funktion mehr als eine Methode, dann wird bei einem Aufruf die erste Methode ausgewählt,
    deren Beschränkungen von den Argumenten des Aufrufes erfüllt werden. Eine Funktion mit mehreren Methoden wird mit `(Function F0 F1 ... Fn)` erzeugt, wobei Fi eine Funktion ist.
+6. Der Pseudo-Parameter `_` kennzeichnet, dass ein Argument erwartet wird, aber in dem Methodenbauch keine Verwendung findet.
+   Es können beliebig viele Unterstriche als Parameter Verwendung finden. Dieser Pseudo-Parameter darf mit `@constrain` beschränkt werden.
+7. Der Pseudo-Parameter `@sealed` blockiert weitere Argumente. Er ist daher pro Parameterliste einmalig, ist ihr letztes Element und "akzeptiert" nur `void`-Werte.
+   `{@sealed -> 42}` ist eine Methode, die keine Argumente akzeptiert, während `{zahl @sealed -> 42}` ausschließlich ein einziges Argument akzeptiert.
 
 ## Variablen
 
@@ -126,6 +127,11 @@ Beschränkt werden kann jedes Element der Parameterliste einschließlich `_` und
     - `,x` -> `(unquote x)`
 8. `(a . b)` wird transformiert zu `(a b)`
 9. Die Zeichen `` ' ? ` `` und `,` innerhalb von Ausdrücken sind unzulässig.
+
+## Maps & Objekte
+
+1. Maps sind assoziative Felder, 
+2. Ist der Schlüssel `@extends` auf einen Wert gesetzt, der zu einer anderen Map oder einer Liste von Maps interpretiert wird, so "erbt" die Map von dieser(/n) anderen Map(s) ihre Eigenschaften (Schlüssel-Wert-Zuordnungen).
 
 ## Grundfunktionen
 
@@ -317,6 +323,8 @@ Daher ist es wichtig, wenn man eine Variable selbst und nicht ihren Wert meint, 
 4. Man sollte sich nicht auf Identitäten bei primitiven Datentypen verlassen.
 5. Funktionen mit leerer Parameterliste können sich entweder so verhalten, als sei `@void` implizit in dieser vorhanden oder als würde `@args` implizit in dieser vorhanden sein, ohne dass `@args` im Funktionsbauch definiert ist. (In diesem Falle würden überschüssige Argumente im Funktionsaufruf ignoriert werden.)
 Eine Implementation muss sich für eines der beiden Verhalten entscheiden.
+6. Wenn in einer Map eine Liste verschiedener Maps dem Schlüssel `@extends` zugeordnet ist und diese Maps dem gleichen Schlüssel einen unterschiedlichen Wert zuweisen, so
+ist es implementationsabhängig, ob der Wert des letzten oder des ersten Auftretens genommen wird.
 
 ### Undefiniertes Verhalten
 
