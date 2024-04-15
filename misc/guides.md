@@ -12,7 +12,7 @@ where FUNCTION‌ is a function in crate CRATE:
 1. Run ```cargo install cargo-show-asm``` once,
 2. run ```cargo asm <CRATE>::<FUNCTION>```.
 
-Source: https://stackoverflow.com/a/54287770 \
+Source: <a href="https://stackoverflow.com/a/54287770" target="_blank" /> \
 Accessed: 2024-04-15
 
 #### Whole crate
@@ -24,7 +24,7 @@ where LMODE is element of {```--<MODE>```, ``` ```}:
 1. Run ```cargo rustc <LMODE> -- emit asm```,
 2. run ```ls target/<MODE>/deps/<CRATE>-<HASH>.s```.
 
-Source: https://stackoverflow.com/a/39220789 \
+Source: <a href="https://stackoverflow.com/a/39220789" target="_blank" /> \
 Accessed: 2024-04-15
 
 ## Building Ogre
