@@ -6,25 +6,25 @@
 
 #### Specific function
 
-For printing assembly output,
+For printing assembly output,\
 where FUNCTION‌ is a function in crate CRATE:
 
 1. Run ```cargo install cargo-show-asm``` once,
 2. run ```cargo asm <CRATE>::<FUNCTION>```.
 
-Source: https://stackoverflow.com/a/54287770
+Source: https://stackoverflow.com/a/54287770 \
 Accessed: 2024-04-15
 
 #### Whole crate
 
-For printing assembly of a crate,
-where MODE is element of {```release```, ```debug```},
+For printing assembly of a crate,\
+where MODE is element of {```release```, ```debug```},\
 where LMODE is element of {```--<MODE>```, ``` ```}:
 
 1. Run ```cargo rustc <LMODE> -- emit asm```,
 2. run ```ls target/<MODE>/deps/<CRATE>-<HASH>.s```.
 
-Source: https://stackoverflow.com/a/39220789
+Source: https://stackoverflow.com/a/39220789 \
 Accessed: 2024-04-15
 
 ## Building Ogre
@@ -33,8 +33,8 @@ Accessed: 2024-04-15
 1. Runterladen des letzten Ogre-Releases.
 2. Entpacken der Zip-Datei.
 3. Im ogre-Ordner befindet sich eine CMakeLists.txt
-Dort muss der CMAKE_BUILD_TYPE auf "Release" gesetzt werden.
-Manuell können weitere Einstellungen vorgenommen werden.
+   Dort muss der CMAKE_BUILD_TYPE auf "Release" gesetzt werden.
+   Manuell können weitere Einstellungen vorgenommen werden.
 4. Im ogre-Ordner muss ein out-Ordner erstellt werden und in diesem ein build-Ordner.
 5. Im build-Ordner startet man die PowerShell und nutzt den Befehl
 
@@ -59,7 +59,7 @@ Danach den folgenden Befehl:
 in den PROJEKTORDNER, der die Quelldateien enthält.
 Projektname ist der Name des Targets, das zur späteren Exe wird.
 Der Einfachheit halber der Name des PROJEKTORDNERS.
-SDK-Pfad ist der Pfad des `sdk/CMAKE/-Unterordners` unter dem build-Ordner. (Sieh oben)
+SDK-Pfad ist der Pfad des `sdk/CMAKE/-Unterordners` unter dem build-Ordner. (Siehe oben)
 
 3. Kopieren des Inhalts der Datei, die unter `ogre/Tutorials/Bootstrap.cpp`
 zu finden ist in die `<Projektname>.cpp`-Datei im CMAKE-Projektordner.
