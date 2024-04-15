@@ -8,4 +8,4 @@ Hier gibt es nicht viel zu sehen.
 
 [Smart Text Processor](./stp/index.html)
 
-[Verschiedenes](./verschiedenes/index.html)
+[Verschiedenes - Miscellaneous](./misc/index.html)
