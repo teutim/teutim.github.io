@@ -1,5 +1,29 @@
 # Guides for myself
 
+## Troubleshooting
+
+### Rust setup errors
+
+#### PP-RK
+
+##### Linker
+
+Run ```apt install clang lld```
+
+##### Project specific
+
+###### Debian
+
+Run ```apt install libasound2-dev libudev-dev pkg-config```
+
+###### Redhat
+
+Run ```yum install alsa-lib-devel```
+
+###### Fedora
+
+Run ```dnf install rust-libudev-devel rust-libudev-sys-devel alsa-lib-devel pkgconf-pkg-config```
+
 ## Rust
 
 ### Show assembly output
