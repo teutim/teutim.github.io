@@ -27,6 +27,18 @@ where LMODE is element of {```--<MODE>```, ``` ```}:
 Source: <a href="https://stackoverflow.com/a/39220789" target="_blank">https://stackoverflow.com/a/39220789</a> \
 Accessed: 2024-04-15
 
+## Linux customization
+
+### Terminal
+
+1. Install [ohmyzsh](https://github.com/ohmyzsh/ohmyzsh)
+2. Set ```ZSH_THEME="agnoster"``` in ```.zshrc```
+3. Install [JetBrainsMono Nerd Font Mono](https://github.com/ryanoasis/nerd-fonts/tree/master/patched-fonts/JetBrainsMono)
+4. In Terminal Preferences
+    1. Text: Set text to ```THIS``` font, size 12
+    2. Colors/Text_and_Background_Color: Set build-in schemes to ```White on black```
+    3. Colors/Palette: Set build-in schemes to ```Tango```
+
 ## Building Ogre
 
 ### Erstellen des Ogre-SDKs
