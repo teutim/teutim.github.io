@@ -1,11 +1,19 @@
-# Hallo, Welt
+# About me
 
 <head>
     <meta name='robots' content='noindex,nofollow,noarchive' />
 </head>
 
-Hier gibt es nicht viel zu sehen.
+I am currently studying computer engineering at the [OWL University of Applied Sciences and Arts](https://www.th-owl.de/).
 
-[Smart Text Processor](./stp/index.html)
+## Projects
 
-[Verschiedenes - Miscellaneous](./misc/index.html)
+- [Registermaschine](https://github.com/PowerVerox/registermaschine)
+
+## Free Time Projects
+
+- [Smart Text Processor](./stp/index.html)
+
+## Miscellaneous
+
+- [Verschiedenes - Miscellaneous](./misc/index.html)
