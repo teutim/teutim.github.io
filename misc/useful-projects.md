@@ -11,4 +11,5 @@
 
 - [Improve performance of you Rust functions by const currying](https://blog.cocl2.com/posts/const-currying-rs)
 - [Process spawning performance in Rust](https://kobzol.github.io/rust/2024/01/28/process-spawning-performance-in-rust.html)
+- [The Common Rust Traits](https://stevedonovan.github.io/rustifications/2018/09/08/common-rust-traits.html)
 
